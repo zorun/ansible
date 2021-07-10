@@ -1221,6 +1221,24 @@ class LinuxHardware(Hardware):
                 self.facts['processor_vcpus'] = (self.facts['processor_threads_per_core'] *
                     self.facts['processor_count'] * self.facts['processor_cores'])
 
+        # Overwrite whatever came out of /proc/cpuinfo with data from lspcu
+        lscpu = self.module.get_bin_path('lscpu')
+        if lscpu:
+            rc, out, err = self.module.run_command(["lscpu"])
+            if rc == 0:
+                for line in out.splitlines():
+                    data = line.split(":", 1)
+                    key = data[0].strip()
+                    value = data[1].strip()
+                    if key == 'Socket(s)':
+                        self.facts['processor_count'] = int(value)
+                    elif key == 'Core(s) per socket':
+                        self.facts['processor_cores'] = int(value)
+                    elif key == 'Thread(s) per core':
+                        self.facts['processor_threads_per_core'] = int(value)
+                    elif key == 'CPU(s)':
+                        self.facts['processor_vcpus'] = int(value)
+
     def get_dmi_facts(self):
         ''' learn dmi facts from system
 
