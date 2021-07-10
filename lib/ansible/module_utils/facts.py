@@ -1163,7 +1163,7 @@ class LinuxHardware(Hardware):
             # model name is for Intel arch, Processor (mind the uppercase P)
             # works for some ARM devices, like the Sheevaplug.
             # 'ncpus active' is SPARC attribute
-            if key in ['model name', 'Processor', 'vendor_id', 'cpu', 'Vendor']:
+            if key in ['model name', 'Processor', 'vendor_id', 'cpu', 'cpu model', 'Vendor']:
                 if 'processor' not in self.facts:
                     self.facts['processor'] = []
                 self.facts['processor'].append(data[1].strip())
@@ -1172,7 +1172,7 @@ class LinuxHardware(Hardware):
                 if key == 'model name':
                     model_name_occurrence += 1
                 i += 1
-            elif key == 'physical id':
+            elif key in ('physical id', 'package'):
                 physid = data[1].strip()
                 if physid not in sockets:
                     sockets[physid] = 1
