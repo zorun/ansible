@@ -1763,6 +1763,7 @@ class OpenBSDHardware(Hardware):
     - processor_cores
     - processor_count
     - processor_speed
+    - uptime_seconds
 
     In addition, it also defines number of DMI facts and device facts.
     """
@@ -1773,6 +1774,7 @@ class OpenBSDHardware(Hardware):
         self.get_memory_facts()
         self.get_processor_facts()
         self.get_device_facts()
+        self.get_uptime_facts()
         try:
             self.get_mount_facts()
         except TimeoutError:
@@ -1855,6 +1857,22 @@ class OpenBSDHardware(Hardware):
         for mib in sysctl_to_dmi:
             if mib in self.sysctl:
                 self.facts[sysctl_to_dmi[mib]] = self.sysctl[mib]
+
+    def get_uptime_facts(self):
+        # On openbsd, we need to call it with -n to get this value as an int.
+        sysctl_cmd = self.module.get_bin_path('sysctl')
+        cmd = [sysctl_cmd, '-n', 'kern.boottime']
+
+        rc, out, err = self.module.run_command(cmd)
+
+        if rc != 0:
+            return
+
+        kern_boottime = out.strip()
+        if not kern_boottime.isdigit():
+            return
+
+        self.facts['uptime_seconds'] = int(time.time() - int(kern_boottime))
 
 class FreeBSDHardware(Hardware):
     """
