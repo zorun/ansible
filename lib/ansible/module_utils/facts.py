@@ -1763,6 +1763,7 @@ class OpenBSDHardware(Hardware):
     - processor_cores
     - processor_count
     - processor_speed
+    - uptime_seconds
 
     In addition, it also defines number of DMI facts and device facts.
     """
@@ -1773,6 +1774,7 @@ class OpenBSDHardware(Hardware):
         self.get_memory_facts()
         self.get_processor_facts()
         self.get_device_facts()
+        self.get_uptime_facts()
         try:
             self.get_mount_facts()
         except TimeoutError:
@@ -1855,6 +1857,22 @@ class OpenBSDHardware(Hardware):
         for mib in sysctl_to_dmi:
             if mib in self.sysctl:
                 self.facts[sysctl_to_dmi[mib]] = self.sysctl[mib]
+
+    def get_uptime_facts(self):
+        # On openbsd, we need to call it with -n to get this value as an int.
+        sysctl_cmd = self.module.get_bin_path('sysctl')
+        cmd = [sysctl_cmd, '-n', 'kern.boottime']
+
+        rc, out, err = self.module.run_command(cmd)
+
+        if rc != 0:
+            return
+
+        kern_boottime = out.strip()
+        if not kern_boottime.isdigit():
+            return
+
+        self.facts['uptime_seconds'] = int(time.time() - int(kern_boottime))
 
 class FreeBSDHardware(Hardware):
     """
@@ -1998,6 +2016,7 @@ class NetBSDHardware(Hardware):
     - processor_cores
     - processor_count
     - devices
+    - uptime_seconds
     """
     platform = 'NetBSD'
     MEMORY_FACTS = ['MemTotal', 'SwapTotal', 'MemFree', 'SwapFree']
@@ -2006,6 +2025,7 @@ class NetBSDHardware(Hardware):
         self.sysctl = self.get_sysctl(['machdep'])
         self.get_cpu_facts()
         self.get_memory_facts()
+        self.get_uptime_facts()
         try:
             self.get_mount_facts()
         except TimeoutError:
@@ -2053,6 +2073,22 @@ class NetBSDHardware(Hardware):
             if key in NetBSDHardware.MEMORY_FACTS:
                 val = data[1].strip().split(' ')[0]
                 self.facts["%s_mb" % key.lower()] = int(val) // 1024
+
+    def get_uptime_facts(self):
+        # On NetBSD, we need to call it with -n to get this value as an int.
+        sysctl_cmd = self.module.get_bin_path('sysctl')
+        cmd = [sysctl_cmd, '-n', 'kern.boottime']
+
+        rc, out, err = self.module.run_command(cmd)
+
+        if rc != 0:
+            return
+
+        kern_boottime = out.strip()
+        if not kern_boottime.isdigit():
+            return
+
+        self.facts['uptime_seconds'] = int(time.time() - int(kern_boottime))
 
     @timeout()
     def get_mount_facts(self):
