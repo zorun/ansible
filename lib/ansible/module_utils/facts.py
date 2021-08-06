@@ -2398,6 +2398,7 @@ class Darwin(Hardware):
     - model
     - osversion
     - osrevision
+    - uptime_seconds
     """
     platform = 'Darwin'
 
@@ -2406,6 +2407,7 @@ class Darwin(Hardware):
         self.get_mac_facts()
         self.get_cpu_facts()
         self.get_memory_facts()
+        self.get_uptime_facts()
         return self.facts
 
     def get_system_profile(self):
@@ -2441,6 +2443,22 @@ class Darwin(Hardware):
         rc, out, err = self.module.run_command("sysctl hw.usermem")
         if rc == 0:
             self.facts['memfree_mb'] = int(out.splitlines()[-1].split()[1]) // 1024 // 1024
+
+    def get_uptime_facts(self):
+        # This works exactly like on FreeBSD.
+        # Use -b to get the raw value and decode it.
+        sysctl_cmd = self.module.get_bin_path('sysctl')
+        cmd = [sysctl_cmd, '-b', 'kern.boottime']
+
+        rc, out, err = self.module.run_command(cmd)
+
+        if rc != 0 or len(out) < struct.calcsize('@LL'):
+            return
+
+        # Returns seconds and microseconds as two different fields
+        (kern_boottime, _)  = struct.unpack('@LL', out)
+
+        self.facts['uptime_seconds'] = int(time.time()) - kern_boottime
 
 class HurdHardware(LinuxHardware):
     """
