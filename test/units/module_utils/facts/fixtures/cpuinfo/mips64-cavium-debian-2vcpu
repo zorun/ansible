@@ -1,0 +1,34 @@
+system type		: UBNT_E200 (CN6120p1.1-1000-NSP)
+machine			: Unknown
+processor		: 0
+cpu model		: Cavium Octeon II V0.1
+BogoMIPS		: 2000.00
+wait instruction	: yes
+microsecond timers	: yes
+tlb_entries		: 128
+extra interrupt vector	: yes
+hardware watchpoint	: yes, count: 2, address/irw mask: [0x0ffc, 0x0ffb]
+isa			: mips1 mips2 mips3 mips4 mips5 mips64r2
+ASEs implemented	:
+shadow register sets	: 1
+kscratch registers	: 3
+core			: 0
+VCED exceptions		: not available
+VCEI exceptions		: not available
+
+processor		: 1
+cpu model		: Cavium Octeon II V0.1
+BogoMIPS		: 2000.00
+wait instruction	: yes
+microsecond timers	: yes
+tlb_entries		: 128
+extra interrupt vector	: yes
+hardware watchpoint	: yes, count: 2, address/irw mask: [0x0ffc, 0x0ffb]
+isa			: mips1 mips2 mips3 mips4 mips5 mips64r2
+ASEs implemented	:
+shadow register sets	: 1
+kscratch registers	: 3
+core			: 1
+VCED exceptions		: not available
+VCEI exceptions		: not available
+

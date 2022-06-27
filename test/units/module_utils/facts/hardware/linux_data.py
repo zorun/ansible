@@ -414,6 +414,28 @@ CPU_INFO_TEST_SCENARIOS = [
             'processor_vcpus': 4},
     },
     {
+        'architecture': 'aarch64',
+        'nproc_out': 8,
+        'sched_getaffinity': set([0, 1, 2, 3, 4, 5, 6, 7]),
+        'cpuinfo': open(os.path.join(os.path.dirname(__file__), '../fixtures/cpuinfo/armv8-8cpu-cpuinfo')).readlines(),
+        'expected_result': {
+            'processor': [
+                '0', 'ARMv8 Processor rev 0 (v8l)',
+                '1', 'ARMv8 Processor rev 0 (v8l)',
+                '2', 'ARMv8 Processor rev 0 (v8l)',
+                '3', 'ARMv8 Processor rev 0 (v8l)',
+                '4', 'ARMv8 Processor rev 0 (v8l)',
+                '5', 'ARMv8 Processor rev 0 (v8l)',
+                '6', 'ARMv8 Processor rev 0 (v8l)',
+                '7', 'ARMv8 Processor rev 0 (v8l)',
+            ],
+            'processor_cores': 1,
+            'processor_count': 8,
+            'processor_nproc': 8,
+            'processor_threads_per_core': 1,
+            'processor_vcpus': 8},
+    },
+    {
         'architecture': 'x86_64',
         'nproc_out': 4,
         'sched_getaffinity': set([0, 1, 2, 3]),
@@ -580,6 +602,70 @@ CPU_INFO_TEST_SCENARIOS = [
             'processor_nproc': 24,
             'processor_threads_per_core': 1,
             'processor_vcpus': 24
+        },
+    },
+    {
+        'cpuinfo': open(os.path.join(os.path.dirname(__file__), '../fixtures/cpuinfo/mips64-cavium-debian-2vcpu')).readlines(),
+        'architecture': 'mips64',
+        'nproc_out': 2,
+        'sched_getaffinity': set([0, 1]),
+        'expected_result': {
+            'processor': [
+                '0', 'Cavium Octeon II V0.1',
+                '1', 'Cavium Octeon II V0.1',
+            ],
+            'processor_cores': 1,
+            'processor_count': 2,
+            'processor_nproc': 2,
+            'processor_threads_per_core': 1,
+            'processor_vcpus': 2
+        },
+    },
+    {
+        'cpuinfo': open(os.path.join(os.path.dirname(__file__), '../fixtures/cpuinfo/loongarch64-loongson-clfs-4vcpu')).readlines(),
+        'architecture': 'loongarch64',
+        'nproc_out': 4,
+        'sched_getaffinity': set([0, 1, 2, 3]),
+        'expected_result': {
+            'processor': [
+                '0', 'Loongson-3A5000',
+                '1', 'Loongson-3A5000',
+                '2', 'Loongson-3A5000',
+                '3', 'Loongson-3A5000',
+            ],
+            'processor_cores': 4,
+            'processor_count': 1,
+            'processor_nproc': 4,
+            'processor_threads_per_core': 1,
+            'processor_vcpus': 4
+        },
+    },
+    {
+        'cpuinfo': open(os.path.join(os.path.dirname(__file__), '../fixtures/cpuinfo/riscv64-visionfive-debian-2vcpu')).readlines(),
+        'architecture': 'riscv64',
+        'nproc_out': 2,
+        'sched_getaffinity': set([0, 1]),
+        'expected_result': {
+            'processor': ['0', '1'],
+            'processor_cores': 2,
+            'processor_count': 1,
+            'processor_nproc': 2,
+            'processor_threads_per_core': 1,
+            'processor_vcpus': 2
+        },
+    },
+    {
+        'cpuinfo': open(os.path.join(os.path.dirname(__file__), '../fixtures/cpuinfo/riscv64-unmatched-ubuntu-4vcpu')).readlines(),
+        'architecture': 'riscv64',
+        'nproc_out': 4,
+        'sched_getaffinity': set([0, 1, 2, 3]),
+        'expected_result': {
+            'processor': ['0', '1', '2', '3'],
+            'processor_cores': 4,
+            'processor_count': 1,
+            'processor_nproc': 4,
+            'processor_threads_per_core': 1,
+            'processor_vcpus': 4
         },
     },
 ]
