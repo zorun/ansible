@@ -622,6 +622,25 @@ CPU_INFO_TEST_SCENARIOS = [
         },
     },
     {
+        'cpuinfo': open(os.path.join(os.path.dirname(__file__), '../fixtures/cpuinfo/mips64-cavium-debian-4vcpu')).readlines(),
+        'architecture': 'mips64',
+        'nproc_out': 4,
+        'sched_getaffinity': set([0, 1, 2, 3]),
+        'expected_result': {
+            'processor': [
+                '0', 'Cavium Octeon III V0.2  FPU V0.0',
+                '1', 'Cavium Octeon III V0.2  FPU V0.0',
+                '2', 'Cavium Octeon III V0.2  FPU V0.0',
+                '3', 'Cavium Octeon III V0.2  FPU V0.0',
+            ],
+            'processor_cores': 4,
+            'processor_count': 1,
+            'processor_nproc': 4,
+            'processor_threads_per_core': 1,
+            'processor_vcpus': 4
+        },
+    },
+    {
         'cpuinfo': open(os.path.join(os.path.dirname(__file__), '../fixtures/cpuinfo/loongarch64-loongson-clfs-4vcpu')).readlines(),
         'architecture': 'loongarch64',
         'nproc_out': 4,
