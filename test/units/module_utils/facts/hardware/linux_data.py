@@ -436,6 +436,19 @@ CPU_INFO_TEST_SCENARIOS = [
             'processor_vcpus': 8},
     },
     {
+        'architecture': 'aarch64',
+        'nproc_out': 8,
+        'sched_getaffinity': set([0, 1, 2, 3, 4, 5, 6, 7]),
+        'cpuinfo': open(os.path.join(os.path.dirname(__file__), '../fixtures/cpuinfo/aarch64-apple-m1-debian-8vcpu')).readlines(),
+        'expected_result': {
+            'processor': ['0', '1', '2', '3', '4', '5', '6', '7'],
+            'processor_cores': 1,
+            'processor_count': 8,
+            'processor_nproc': 8,
+            'processor_threads_per_core': 1,
+            'processor_vcpus': 8},
+    },
+    {
         'architecture': 'x86_64',
         'nproc_out': 4,
         'sched_getaffinity': set([0, 1, 2, 3]),
